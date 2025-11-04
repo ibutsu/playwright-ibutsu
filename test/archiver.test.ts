@@ -17,12 +17,12 @@ describe('IbutsuArchiver', () => {
     results = [
       new TestResult({
         test_id: 'test-1',
-        result: 'passed'
+        result: 'passed',
       }),
       new TestResult({
         test_id: 'test-2',
-        result: 'failed'
-      })
+        result: 'failed',
+      }),
     ];
 
     // Add some artifacts

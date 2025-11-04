@@ -10,7 +10,13 @@ import {
 import * as fs from 'fs';
 import * as path from 'path';
 import { TestRun, TestResult, IbutsuReporterConfig } from './types';
-import { getConfig, validateConfig, shouldCreateArchive, shouldUploadToServer, shouldUploadToS3 } from './config';
+import {
+  getConfig,
+  validateConfig,
+  shouldCreateArchive,
+  shouldUploadToServer,
+  shouldUploadToS3,
+} from './config';
 import { createArchive } from './archiver';
 import { sendToServer } from './sender';
 import { uploadToS3 } from './s3-uploader';
