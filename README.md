@@ -2,6 +2,10 @@
 
 A Playwright test reporter for uploading test results to [Ibutsu](https://github.com/ibutsu/ibutsu-server).
 
+
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/ibutsu/playwright-ibutsu/main.svg)](https://results.pre-commit.ci/latest/github/ibutsu/playwright-ibutsu/main)
+
+
 ## Features
 
 - Upload test results and artifacts to Ibutsu server
