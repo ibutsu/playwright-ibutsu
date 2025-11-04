@@ -43,4 +43,3 @@ flag_management:
       paths:
         - src/
       carryforward: true
-

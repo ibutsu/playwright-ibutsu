@@ -31,7 +31,7 @@ describe('getConfig', () => {
   });
 
   it('should use config values when env vars not set', () => {
-    const config = getConfig({ 
+    const config = getConfig({
       server: 'http://config-server',
       source: 'test-source'
     });
@@ -60,7 +60,7 @@ describe('validateConfig', () => {
   });
 
   it('should normalize server URL', () => {
-    const config = { 
+    const config = {
       mode: 'server' as const,
       server: 'http://test.com/',
       token: 'test-token'
@@ -140,4 +140,3 @@ describe('shouldUploadToS3', () => {
     expect(shouldUploadToS3({ s3Bucket: 'test-bucket' })).toBe(false);
   });
 });
-

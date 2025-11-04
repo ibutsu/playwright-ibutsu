@@ -334,4 +334,3 @@ export default class IbutsuReporter implements Reporter {
     }
   }
 }
-

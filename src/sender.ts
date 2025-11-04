@@ -264,7 +264,7 @@ export class IbutsuSender {
 
       // Upload artifact
       const params = isRun ? { runId: id } : { resultId: id };
-      
+
       await this.makeCall(
         () =>
           this.artifactApi.uploadArtifact({
@@ -354,4 +354,3 @@ export async function sendToServer(
 
   return { success, errors, frontendUrl };
 }
-

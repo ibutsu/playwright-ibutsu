@@ -12,7 +12,7 @@ export class S3Uploader {
 
   constructor(bucketName?: string, region?: string) {
     this.bucketName = bucketName || process.env.AWS_BUCKET || '';
-    
+
     if (!this.bucketName) {
       throw new Error(
         'AWS bucket name is required. Set AWS_BUCKET environment variable or pass bucketName parameter.'
@@ -169,4 +169,3 @@ export async function uploadToS3(
     throw error;
   }
 }
-
