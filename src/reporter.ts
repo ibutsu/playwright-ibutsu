@@ -1,4 +1,4 @@
-import {
+import type {
   Reporter,
   FullConfig,
   Suite,
@@ -7,9 +7,8 @@ import {
   FullResult,
   TestError,
 } from '@playwright/test/reporter';
-import * as fs from 'fs';
-import * as path from 'path';
-import { TestRun, TestResult, IbutsuReporterConfig } from './types';
+import type { IbutsuReporterConfig } from './types';
+import { TestRun, TestResult } from './types';
 import {
   getConfig,
   validateConfig,
@@ -29,8 +28,8 @@ import { uploadToS3 } from './s3-uploader';
 export default class IbutsuReporter implements Reporter {
   private config: IbutsuReporterConfig;
   private run!: TestRun;
-  private results: Map<string, TestResult> = new Map();
-  private enabled: boolean = true;
+  private results = new Map<string, TestResult>();
+  private enabled = true;
 
   constructor(options: IbutsuReporterConfig = {}) {
     try {
@@ -46,7 +45,7 @@ export default class IbutsuReporter implements Reporter {
   /**
    * Called once before running tests
    */
-  onBegin(config: FullConfig, suite: Suite): void {
+  onBegin(config: FullConfig, _suite: Suite): void {
     if (!this.enabled) {
       return;
     }
@@ -115,7 +114,7 @@ export default class IbutsuReporter implements Reporter {
   /**
    * Called after all tests are done
    */
-  async onEnd(result: FullResult): Promise<void> {
+  async onEnd(_result: FullResult): Promise<void> {
     if (!this.enabled) {
       return;
     }
@@ -181,7 +180,7 @@ export default class IbutsuReporter implements Reporter {
    * Get unique test ID
    */
   private getTestId(test: TestCase): string {
-    const projectName = test.parent.project()?.name || 'default';
+    const projectName = test.parent.project()?.name ?? 'default';
     const titlePath = test.titlePath().join(' › ');
     return `${projectName}::${titlePath}`;
   }
@@ -208,28 +207,34 @@ export default class IbutsuReporter implements Reporter {
     // Collect screenshots
     for (const attachment of result.attachments) {
       if (attachment.contentType.startsWith('image/')) {
-        const filename = attachment.name || 'screenshot.png';
+        const filename = attachment.name ?? 'screenshot.png';
         if (attachment.body) {
           testResult.addArtifact(filename, attachment.body);
-        } else if (attachment.path) {
+        } else if (attachment.path && attachment.path.length > 0) {
           testResult.addArtifact(filename, attachment.path);
         }
       }
 
       // Collect traces
-      if (attachment.name === 'trace' && attachment.path) {
+      if (attachment.name === 'trace' && attachment.path && attachment.path.length > 0) {
         testResult.addArtifact('trace.zip', attachment.path);
       }
 
       // Collect videos
-      if (attachment.contentType.startsWith('video/') && attachment.path) {
+      if (
+        attachment.contentType.startsWith('video/') &&
+        attachment.path &&
+        attachment.path.length > 0
+      ) {
         testResult.addArtifact('video.webm', attachment.path);
       }
     }
 
     // Collect error logs
     if (result.errors.length > 0) {
-      const errorLog = result.errors.map((e) => e.message || e.value).join('\n\n');
+      const errorLog = result.errors
+        .map((e) => e.message ?? e.value ?? 'Unknown error')
+        .join('\n\n');
       testResult.addArtifact('error.log', errorLog);
     }
 
@@ -290,7 +295,12 @@ export default class IbutsuReporter implements Reporter {
    * Upload to Ibutsu server
    */
   private async uploadToServer(results: TestResult[]): Promise<void> {
-    if (!this.config.server || !this.config.token) {
+    if (
+      !this.config.server ||
+      this.config.server.length === 0 ||
+      !this.config.token ||
+      this.config.token.length === 0
+    ) {
       console.error('Ibutsu Reporter: Server URL or token not configured');
       return;
     }
@@ -308,7 +318,7 @@ export default class IbutsuReporter implements Reporter {
 
       if (success) {
         console.log('  Upload successful!');
-        if (frontendUrl) {
+        if (frontendUrl && frontendUrl.length > 0) {
           console.log(`  View results: ${frontendUrl}/runs/${this.run.id}`);
         }
       } else {
@@ -323,6 +333,10 @@ export default class IbutsuReporter implements Reporter {
    * Upload archives to S3
    */
   private async uploadToS3(): Promise<void> {
+    if (!this.config.s3Bucket || this.config.s3Bucket.length === 0) {
+      return;
+    }
+
     try {
       console.log('\nIbutsu Reporter: Uploading to S3...');
       console.log(`  Bucket: ${this.config.s3Bucket}`);

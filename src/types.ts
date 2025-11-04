@@ -68,9 +68,7 @@ export interface IbutsuReporterConfig {
 /**
  * Internal artifact storage
  */
-export interface ArtifactMap {
-  [filename: string]: Buffer | string;
-}
+export type ArtifactMap = Record<string, Buffer | string>;
 
 /**
  * Test run class with helper methods
@@ -85,17 +83,17 @@ export class TestRun implements IbutsuTestRun {
   duration: number;
   summary: Summary;
   private _artifacts: ArtifactMap = {};
-  private _start_unix_time: number = 0;
+  private _start_unix_time = 0;
 
   constructor(config: Partial<IbutsuTestRun> = {}) {
-    this.id = config.id || uuidv4();
+    this.id = config.id ?? uuidv4();
     this.component = config.component;
-    this.env = config.env || process.env.IBUTSU_ENV_ID;
-    this.metadata = config.metadata || {};
+    this.env = config.env ?? process.env.IBUTSU_ENV_ID;
+    this.metadata = config.metadata ?? {};
     this.source = config.source;
-    this.start_time = config.start_time || '';
-    this.duration = config.duration || 0;
-    this.summary = config.summary || {
+    this.start_time = config.start_time ?? '';
+    this.duration = config.duration ?? 0;
+    this.summary = config.summary ?? {
       failures: 0,
       errors: 0,
       xfailures: 0,
@@ -107,16 +105,19 @@ export class TestRun implements IbutsuTestRun {
     };
 
     // Add Jenkins metadata if available
-    if (process.env.JOB_NAME && process.env.BUILD_NUMBER) {
+    const jobName = process.env.JOB_NAME;
+    const buildNumber = process.env.BUILD_NUMBER;
+    if (jobName && jobName.length > 0 && buildNumber && buildNumber.length > 0) {
       this.metadata.jenkins = {
-        job_name: process.env.JOB_NAME,
-        build_number: process.env.BUILD_NUMBER,
+        job_name: jobName,
+        build_number: buildNumber,
         build_url: process.env.BUILD_URL,
       };
     }
 
-    if (process.env.IBUTSU_ENV_ID) {
-      this.metadata.env_id = process.env.IBUTSU_ENV_ID;
+    const envId = process.env.IBUTSU_ENV_ID;
+    if (envId && envId.length > 0) {
+      this.metadata.env_id = envId;
     }
   }
 
@@ -165,15 +166,15 @@ export class TestResult implements IbutsuTestResult {
   metadata: Record<string, unknown>;
   params?: Record<string, unknown>;
   private _artifacts: ArtifactMap = {};
-  private _start_unix_time: number = 0;
+  private _start_unix_time = 0;
 
   constructor(config: Partial<IbutsuTestResult> & { test_id: string }) {
-    this.id = config.id || uuidv4();
+    this.id = config.id ?? uuidv4();
     this.test_id = config.test_id;
-    this.result = config.result || 'passed';
-    this.duration = config.duration || 0;
-    this.start_time = config.start_time || '';
-    this.metadata = config.metadata || {};
+    this.result = config.result ?? 'passed';
+    this.duration = config.duration ?? 0;
+    this.start_time = config.start_time ?? '';
+    this.metadata = config.metadata ?? {};
     this.params = config.params;
   }
 

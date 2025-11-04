@@ -9,16 +9,16 @@ repos:
       - id: check-json
   - repo: local
     hooks:
-      - id: npm-lint
-        name: npm lint
-        entry: npm run lint:fix
+      - id: yarn-lint
+        name: yarn lint
+        entry: yarn run lint:fix
         language: system
         types: [file]
         files: \.(ts|tsx)$
         pass_filenames: false
-      - id: npm-format
-        name: npm format
-        entry: npm run format
+      - id: yarn-format
+        name: yarn format
+        entry: yarn run format
         language: system
         types: [file]
         files: \.(ts|tsx|json|yaml|md)$
