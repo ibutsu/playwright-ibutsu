@@ -1,0 +1,26 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+      - id: check-json
+  - repo: local
+    hooks:
+      - id: npm-lint
+        name: npm lint
+        entry: npm run lint:fix
+        language: system
+        types: [file]
+        files: \.(ts|tsx)$
+        pass_filenames: false
+      - id: npm-format
+        name: npm format
+        entry: npm run format
+        language: system
+        types: [file]
+        files: \.(ts|tsx|json|yaml|md)$
+        pass_filenames: false
+
