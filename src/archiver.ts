@@ -100,11 +100,7 @@ export class IbutsuArchiver {
   /**
    * Write an artifact file
    */
-  private async writeArtifact(
-    dir: string,
-    filename: string,
-    data: Buffer | string
-  ): Promise<void> {
+  private async writeArtifact(dir: string, filename: string, data: Buffer | string): Promise<void> {
     try {
       const artifactPath = path.join(dir, filename);
 

@@ -84,13 +84,7 @@ class ArtifactDataHandler {
 /**
  * Retry errors that should trigger a retry
  */
-const RETRIABLE_ERRORS = [
-  'ECONNRESET',
-  'ETIMEDOUT',
-  'ECONNREFUSED',
-  'ENOTFOUND',
-  'ENETUNREACH',
-];
+const RETRIABLE_ERRORS = ['ECONNRESET', 'ETIMEDOUT', 'ECONNREFUSED', 'ENOTFOUND', 'ENETUNREACH'];
 
 /**
  * Check if an error is retriable
@@ -186,9 +180,7 @@ export class IbutsuSender {
             );
             await sleep(delay);
           } else {
-            console.error(
-              `Network error (final attempt ${retries}/${MAX_CALL_RETRIES}): ${error}`
-            );
+            console.error(`Network error (final attempt ${retries}/${MAX_CALL_RETRIES}): ${error}`);
             if (!hideException) {
               this.hasServerError = true;
               this.serverErrors.push(String(error));
@@ -223,10 +215,7 @@ export class IbutsuSender {
 
     if (existingRun) {
       // Update existing run
-      await this.makeCall(
-        () => this.runApi.updateRun({ id: run.id, run: runData }),
-        'updateRun'
-      );
+      await this.makeCall(() => this.runApi.updateRun({ id: run.id, run: runData }), 'updateRun');
     } else {
       // Add new run
       await this.makeCall(() => this.runApi.addRun({ run: runData }), 'addRun');
@@ -282,11 +271,7 @@ export class IbutsuSender {
   /**
    * Upload artifacts for a run or result
    */
-  async uploadArtifacts(
-    id: string,
-    artifacts: ArtifactMap,
-    isRun: boolean = false
-  ): Promise<void> {
+  async uploadArtifacts(id: string, artifacts: ArtifactMap, isRun: boolean = false): Promise<void> {
     for (const [filename, data] of Object.entries(artifacts)) {
       try {
         await this.uploadArtifact(id, filename, data, isRun);

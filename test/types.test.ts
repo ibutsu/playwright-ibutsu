@@ -70,7 +70,7 @@ describe('TestResult', () => {
   it('should convert to dictionary', () => {
     const result = new TestResult({
       test_id: 'test-1',
-      result: 'failed'
+      result: 'failed',
     });
     const dict = result.toDict();
 

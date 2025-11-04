@@ -1,4 +1,10 @@
-import { getConfig, validateConfig, shouldCreateArchive, shouldUploadToServer, shouldUploadToS3 } from '../src/config';
+import {
+  getConfig,
+  validateConfig,
+  shouldCreateArchive,
+  shouldUploadToServer,
+  shouldUploadToS3,
+} from '../src/config';
 
 describe('getConfig', () => {
   const originalEnv = process.env;
@@ -33,7 +39,7 @@ describe('getConfig', () => {
   it('should use config values when env vars not set', () => {
     const config = getConfig({
       server: 'http://config-server',
-      source: 'test-source'
+      source: 'test-source',
     });
     expect(config.server).toBe('http://config-server');
     expect(config.source).toBe('test-source');
@@ -63,7 +69,7 @@ describe('validateConfig', () => {
     const config = {
       mode: 'server' as const,
       server: 'http://test.com/',
-      token: 'test-token'
+      token: 'test-token',
     };
     validateConfig(config);
     expect(config.server).toBe('http://test.com/api');

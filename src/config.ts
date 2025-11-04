@@ -27,7 +27,8 @@ export function getConfig(reporterConfig: IbutsuReporterConfig = {}): IbutsuRepo
     project: process.env.IBUTSU_PROJECT || reporterConfig.project,
 
     // Mode configuration
-    mode: (process.env.IBUTSU_MODE as 'server' | 'archive' | 'both') || reporterConfig.mode || 'both',
+    mode:
+      (process.env.IBUTSU_MODE as 'server' | 'archive' | 'both') || reporterConfig.mode || 'both',
     noArchive: process.env.IBUTSU_NO_ARCHIVE === 'true' || reporterConfig.noArchive || false,
 
     // S3 configuration

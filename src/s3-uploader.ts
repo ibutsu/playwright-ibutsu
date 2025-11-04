@@ -141,9 +141,7 @@ export class S3Uploader {
       }
     }
 
-    console.log(
-      `Successfully uploaded ${uploadedUrls.length} out of ${files.length} files`
-    );
+    console.log(`Successfully uploaded ${uploadedUrls.length} out of ${files.length} files`);
 
     if (errors.length > 0) {
       console.error(`Failed to upload ${errors.length} files:`, errors);
