@@ -62,7 +62,8 @@
     "dist",
     "src",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "eslint.config.mjs"
   ],
   "engines": {
     "node": ">=18.0.0"

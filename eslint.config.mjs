@@ -7,7 +7,7 @@ export default tseslint.config(
   eslint.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,
   ...tseslint.configs.stylisticTypeChecked,
-  
+
   // TypeScript parser configuration
   {
     languageOptions: {
@@ -53,12 +53,11 @@ export default tseslint.config(
       'node_modules/',
       'coverage/',
       '*.js',
+      '!eslint.config.mjs',
       '*.d.ts',
-      '!eslint.config.js',
     ],
   },
 
   // Prettier config must be last to override
   eslintConfigPrettier
 );
-

@@ -11,9 +11,9 @@ export class S3Uploader {
   private bucketName: string;
 
   constructor(bucketName?: string, region?: string) {
-    this.bucketName = bucketName || process.env.AWS_BUCKET || '';
+    this.bucketName = bucketName ?? process.env.AWS_BUCKET ?? '';
 
-    if (!this.bucketName) {
+    if (this.bucketName.length === 0) {
       throw new Error(
         'AWS bucket name is required. Set AWS_BUCKET environment variable or pass bucketName parameter.'
       );
@@ -25,14 +25,14 @@ export class S3Uploader {
     // - EC2 instance profile
     // - AWS IAM role
     this.s3Client = new S3Client({
-      region: region || process.env.AWS_REGION || 'us-east-1',
+      region: region ?? process.env.AWS_REGION ?? 'us-east-1',
     });
   }
 
   /**
    * Find UUID.tar.gz files in a directory
    */
-  async findUuidTarGzFiles(directory: string = '.'): Promise<string[]> {
+  async findUuidTarGzFiles(directory = '.'): Promise<string[]> {
     try {
       const files = await fs.promises.readdir(directory);
       return files
@@ -60,7 +60,7 @@ export class S3Uploader {
         Key: key,
       });
       const response = await this.s3Client.send(command);
-      const s3FileSize = response.ContentLength || 0;
+      const s3FileSize = response.ContentLength ?? 0;
       return s3FileSize === localFileSize;
     } catch (error: unknown) {
       // If the file doesn't exist, HeadObject throws an error
@@ -83,7 +83,7 @@ export class S3Uploader {
         throw new Error(`${filePath} is not a file`);
       }
 
-      const s3Key = key || path.basename(filePath);
+      const s3Key = key ?? path.basename(filePath);
       const localFileSize = stats.size;
       const s3Url = `s3://${this.bucketName}/${s3Key}`;
 
@@ -117,7 +117,11 @@ export class S3Uploader {
   /**
    * Upload multiple archive files from a directory
    */
-  async uploadArchives(directory: string = '.'): Promise<string[]> {
+  async uploadArchives(directory = '.'): Promise<string[]> {
+    if (directory.length === 0) {
+      directory = '.';
+    }
+
     console.log(`Scanning ${directory} for UUID.tar.gz files`);
     const files = await this.findUuidTarGzFiles(directory);
 
@@ -155,7 +159,7 @@ export class S3Uploader {
  * Upload archives to S3
  */
 export async function uploadToS3(
-  directory: string = '.',
+  directory = '.',
   bucketName?: string,
   region?: string
 ): Promise<string[]> {

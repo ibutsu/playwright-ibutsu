@@ -1,7 +1,7 @@
 import * as tar from 'tar';
 import * as fs from 'fs';
 import * as path from 'path';
-import { TestRun, TestResult } from './types';
+import type { TestRun, TestResult } from './types';
 
 /**
  * Creates a tar.gz archive for an Ibutsu test run
@@ -10,7 +10,7 @@ export class IbutsuArchiver {
   private archivePath: string;
   private tempDir: string;
 
-  constructor(runId: string, outputDir: string = '.') {
+  constructor(runId: string, outputDir = '.') {
     this.archivePath = path.join(outputDir, `${runId}.tar.gz`);
     this.tempDir = path.join(outputDir, '.ibutsu-temp', runId);
   }
@@ -163,7 +163,7 @@ export class IbutsuArchiver {
 export async function createArchive(
   run: TestRun,
   results: TestResult[],
-  outputDir: string = '.'
+  outputDir = '.'
 ): Promise<string> {
   const archiver = new IbutsuArchiver(run.id, outputDir);
   return await archiver.create(run, results);

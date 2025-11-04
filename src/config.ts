@@ -1,4 +1,4 @@
-import { IbutsuReporterConfig } from './types';
+import type { IbutsuReporterConfig } from './types';
 
 /**
  * Get configuration from both environment variables and reporter config
@@ -8,7 +8,7 @@ import { IbutsuReporterConfig } from './types';
  */
 export function getConfig(reporterConfig: IbutsuReporterConfig = {}): IbutsuReporterConfig {
   // Validate that token is not in config file (security)
-  if (reporterConfig.token) {
+  if (reporterConfig.token && reporterConfig.token.length > 0) {
     throw new Error(
       'SECURITY ERROR: IBUTSU_TOKEN must not be stored in playwright.config.ts. ' +
         'Please use the IBUTSU_TOKEN environment variable instead.'
@@ -21,24 +21,24 @@ export function getConfig(reporterConfig: IbutsuReporterConfig = {}): IbutsuRepo
   // Build final configuration with priority: env vars > config file
   const config: IbutsuReporterConfig = {
     // Server configuration
-    server: process.env.IBUTSU_SERVER || reporterConfig.server,
+    server: process.env.IBUTSU_SERVER ?? reporterConfig.server,
     token: token, // Only from environment
-    source: process.env.IBUTSU_SOURCE || reporterConfig.source,
-    project: process.env.IBUTSU_PROJECT || reporterConfig.project,
+    source: process.env.IBUTSU_SOURCE ?? reporterConfig.source,
+    project: process.env.IBUTSU_PROJECT ?? reporterConfig.project,
 
     // Mode configuration
     mode:
-      (process.env.IBUTSU_MODE as 'server' | 'archive' | 'both') || reporterConfig.mode || 'both',
-    noArchive: process.env.IBUTSU_NO_ARCHIVE === 'true' || reporterConfig.noArchive || false,
+      (process.env.IBUTSU_MODE as 'server' | 'archive' | 'both') ?? reporterConfig.mode ?? 'both',
+    noArchive: process.env.IBUTSU_NO_ARCHIVE === 'true' || reporterConfig.noArchive === true,
 
     // S3 configuration
-    s3Bucket: process.env.AWS_BUCKET || reporterConfig.s3Bucket,
-    s3Region: process.env.AWS_REGION || reporterConfig.s3Region,
+    s3Bucket: process.env.AWS_BUCKET ?? reporterConfig.s3Bucket,
+    s3Region: process.env.AWS_REGION ?? reporterConfig.s3Region,
 
     // Additional metadata
-    metadata: reporterConfig.metadata || {},
-    component: process.env.IBUTSU_COMPONENT || reporterConfig.component,
-    env: process.env.IBUTSU_ENV || reporterConfig.env,
+    metadata: reporterConfig.metadata ?? {},
+    component: process.env.IBUTSU_COMPONENT ?? reporterConfig.component,
+    env: process.env.IBUTSU_ENV ?? reporterConfig.env,
   };
 
   return config;
@@ -48,18 +48,18 @@ export function getConfig(reporterConfig: IbutsuReporterConfig = {}): IbutsuRepo
  * Validate configuration and check for required fields based on mode
  */
 export function validateConfig(config: IbutsuReporterConfig): void {
-  const mode = config.mode || 'both';
+  const mode = config.mode ?? 'both';
 
   // If mode includes 'server', validate server configuration
   if (mode === 'server' || mode === 'both') {
-    if (!config.server) {
+    if (!config.server || config.server.length === 0) {
       throw new Error(
         'IBUTSU_SERVER is required when mode is "server" or "both". ' +
           'Set it via environment variable or reporter config.'
       );
     }
 
-    if (!config.token) {
+    if (!config.token || config.token.length === 0) {
       throw new Error(
         'IBUTSU_TOKEN is required when mode is "server" or "both". ' +
           'Set it via the IBUTSU_TOKEN environment variable.'
@@ -68,7 +68,7 @@ export function validateConfig(config: IbutsuReporterConfig): void {
   }
 
   // Normalize server URL
-  if (config.server) {
+  if (config.server && config.server.length > 0) {
     let server = config.server;
     // Remove trailing slash
     if (server.endsWith('/')) {
@@ -86,15 +86,15 @@ export function validateConfig(config: IbutsuReporterConfig): void {
  * Check if archiving should be enabled based on configuration
  */
 export function shouldCreateArchive(config: IbutsuReporterConfig): boolean {
-  const mode = config.mode || 'both';
-  return !config.noArchive && (mode === 'archive' || mode === 'both');
+  const mode = config.mode ?? 'both';
+  return config.noArchive !== true && (mode === 'archive' || mode === 'both');
 }
 
 /**
  * Check if server upload should be enabled based on configuration
  */
 export function shouldUploadToServer(config: IbutsuReporterConfig): boolean {
-  const mode = config.mode || 'both';
+  const mode = config.mode ?? 'both';
   return mode === 'server' || mode === 'both';
 }
 
@@ -102,5 +102,9 @@ export function shouldUploadToServer(config: IbutsuReporterConfig): boolean {
  * Check if S3 upload should be enabled based on configuration
  */
 export function shouldUploadToS3(config: IbutsuReporterConfig): boolean {
-  return !!(config.s3Bucket && (process.env.AWS_ACCESS_KEY_ID || process.env.AWS_PROFILE));
+  const hasBucket = config.s3Bucket !== undefined && config.s3Bucket.length > 0;
+  const hasCredentials =
+    (process.env.AWS_ACCESS_KEY_ID !== undefined && process.env.AWS_ACCESS_KEY_ID.length > 0) ||
+    (process.env.AWS_PROFILE !== undefined && process.env.AWS_PROFILE.length > 0);
+  return hasBucket && hasCredentials;
 }

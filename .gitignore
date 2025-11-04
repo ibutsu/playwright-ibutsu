@@ -35,6 +35,9 @@ temp/
 *~
 .DS_Store
 
+# ESLint cache
+.eslintcache
+
 # Environment
 .env
 .env.local
