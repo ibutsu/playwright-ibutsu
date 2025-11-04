@@ -16,4 +16,3 @@
 ## Pre-commit hooks
 - Run `npm run precommit` to execute linting and formatting
 - Pre-commit hooks will automatically run on commit if configured
-

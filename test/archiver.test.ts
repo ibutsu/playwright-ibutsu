@@ -15,11 +15,11 @@ describe('IbutsuArchiver', () => {
     run.stopTimer();
 
     results = [
-      new TestResult({ 
+      new TestResult({
         test_id: 'test-1',
         result: 'passed'
       }),
-      new TestResult({ 
+      new TestResult({
         test_id: 'test-2',
         result: 'failed'
       })
@@ -69,4 +69,3 @@ describe('IbutsuArchiver', () => {
     expect(fs.existsSync(tempDir)).toBe(false);
   });
 });
-

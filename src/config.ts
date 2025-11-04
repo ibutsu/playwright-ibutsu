@@ -103,4 +103,3 @@ export function shouldUploadToServer(config: IbutsuReporterConfig): boolean {
 export function shouldUploadToS3(config: IbutsuReporterConfig): boolean {
   return !!(config.s3Bucket && (process.env.AWS_ACCESS_KEY_ID || process.env.AWS_PROFILE));
 }
-

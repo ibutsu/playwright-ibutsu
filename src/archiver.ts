@@ -107,10 +107,10 @@ export class IbutsuArchiver {
   ): Promise<void> {
     try {
       const artifactPath = path.join(dir, filename);
-      
+
       // Ensure parent directory exists
       await fs.promises.mkdir(path.dirname(artifactPath), { recursive: true });
-      
+
       if (Buffer.isBuffer(data)) {
         await fs.promises.writeFile(artifactPath, data);
       } else if (typeof data === 'string') {
@@ -147,7 +147,7 @@ export class IbutsuArchiver {
   private async cleanup(): Promise<void> {
     try {
       await fs.promises.rm(this.tempDir, { recursive: true, force: true });
-      
+
       // Try to remove parent temp directory if empty
       const parentTempDir = path.dirname(this.tempDir);
       try {
@@ -172,4 +172,3 @@ export async function createArchive(
   const archiver = new IbutsuArchiver(run.id, outputDir);
   return await archiver.create(run, results);
 }
-

@@ -140,10 +140,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Run Playwright tests
         env:
           IBUTSU_SERVER: https://ibutsu.example.com
@@ -177,7 +177,7 @@ The reporter automatically collects artifacts from failed tests:
 - **Screenshots**: All images attached to test results
 - **Traces**: Playwright trace files (`.zip`)
 - **Videos**: Test execution videos (`.webm`)
-- **Logs**: 
+- **Logs**:
   - Error logs from test failures
   - stdout/stderr output
   - Browser console logs
@@ -210,4 +210,3 @@ MIT
 - [ibutsu-server](https://github.com/ibutsu/ibutsu-server) - The Ibutsu backend server
 - [pytest-ibutsu](https://github.com/ibutsu/pytest-ibutsu) - Pytest plugin for Ibutsu
 - [@ibutsu/client](https://github.com/ibutsu/ibutsu-client-javascript) - TypeScript client for Ibutsu API
-

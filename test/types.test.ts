@@ -22,7 +22,7 @@ describe('TestRun', () => {
     const run = new TestRun();
     run.startTimer();
     expect(run.start_time).toBeDefined();
-    
+
     // Wait a bit
     setTimeout(() => {
       run.stopTimer();
@@ -34,7 +34,7 @@ describe('TestRun', () => {
     const run = new TestRun();
     const testData = Buffer.from('test data');
     run.addArtifact('test.txt', testData);
-    
+
     const artifacts = run.getArtifacts();
     expect(artifacts['test.txt']).toEqual(testData);
   });
@@ -42,7 +42,7 @@ describe('TestRun', () => {
   it('should convert to dictionary', () => {
     const run = new TestRun({ source: 'test-source' });
     const dict = run.toDict();
-    
+
     expect(dict.id).toBeDefined();
     expect(dict.source).toBe('test-source');
     expect(dict.summary).toBeDefined();
@@ -62,18 +62,18 @@ describe('TestResult', () => {
     const result = new TestResult({ test_id: 'test-1' });
     const screenshot = Buffer.from('fake screenshot');
     result.addArtifact('screenshot.png', screenshot);
-    
+
     const artifacts = result.getArtifacts();
     expect(artifacts['screenshot.png']).toEqual(screenshot);
   });
 
   it('should convert to dictionary', () => {
-    const result = new TestResult({ 
+    const result = new TestResult({
       test_id: 'test-1',
       result: 'failed'
     });
     const dict = result.toDict();
-    
+
     expect(dict.id).toBeDefined();
     expect(dict.test_id).toBe('test-1');
     expect(dict.result).toBe('failed');
@@ -93,4 +93,3 @@ describe('isValidUUID', () => {
     expect(isValidUUID('550e8400-e29b-41d4-a716-44665544000g')).toBe(false);
   });
 });
-
