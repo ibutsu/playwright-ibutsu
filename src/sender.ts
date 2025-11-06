@@ -1,4 +1,4 @@
-import { Configuration, RunApi, ResultApi, ArtifactApi, HealthApi } from '@ibutsu/client';
+import { Configuration, RunApi, ResultApi, ArtifactApi, HealthApi } from 'ibutsu-client-ts';
 import * as fs from 'fs';
 import type { TestRun, TestResult, ArtifactMap } from './types';
 
@@ -106,8 +106,6 @@ function sleep(ms: number): Promise<void> {
  * Sender for uploading results to Ibutsu server
  */
 export class IbutsuSender {
-  private serverUrl: string;
-  private token: string | undefined;
   private runApi: RunApi;
   private resultApi: ResultApi;
   private artifactApi: ArtifactApi;
@@ -116,11 +114,7 @@ export class IbutsuSender {
   private serverErrors: string[] = [];
 
   constructor(serverUrl: string, token?: string) {
-    this.serverUrl = serverUrl;
-    this.token = token;
-
     // Configure API client
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     const config: Configuration = new Configuration({
       basePath: serverUrl,
       accessToken: token,
@@ -137,13 +131,9 @@ export class IbutsuSender {
       }
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     this.runApi = new RunApi(config);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     this.resultApi = new ResultApi(config);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     this.artifactApi = new ArtifactApi(config);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     this.healthApi = new HealthApi(config);
   }
 
@@ -152,9 +142,7 @@ export class IbutsuSender {
    */
   async getFrontendUrl(): Promise<string | undefined> {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       const healthInfo = await this.healthApi.getHealthInfo();
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
       return healthInfo.frontend;
     } catch (error) {
       console.error('Failed to get frontend URL:', error);
@@ -236,7 +224,6 @@ export class IbutsuSender {
    */
   async addResult(result: TestResult): Promise<void> {
     const resultData = result.toDict();
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     await this.makeCall(() => this.resultApi.addResult({ result: resultData }), 'addResult');
   }
 
@@ -261,15 +248,17 @@ export class IbutsuSender {
       // Prepare data
       const preparedData = await handler.getPreparedData();
 
+      // Convert Buffer to Blob for API upload
+      const blob = new Blob([preparedData]);
+
       // Upload artifact
       const params = isRun ? { runId: id } : { resultId: id };
 
       await this.makeCall(
         () =>
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
           this.artifactApi.uploadArtifact({
             filename,
-            file: preparedData,
+            file: blob,
             ...params,
           }),
         'uploadArtifact'

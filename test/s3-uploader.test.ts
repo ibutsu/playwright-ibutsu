@@ -1,4 +1,3 @@
-import { isValidUUID } from '../src/types';
 import { S3Uploader } from '../src/s3-uploader';
 
 // Mock AWS SDK

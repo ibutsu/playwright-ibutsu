@@ -8,11 +8,36 @@ on:
     types: ["opened", "synchronize", "reopened"]
 
 jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install pre-commit
+        run: pip install pre-commit
+
+      - name: Run pre-commit
+        run: pre-commit run --all-files
+
   test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: ["18.x", "20.x", "22.x"]
+        node-version: ["22"]
     steps:
       - uses: actions/checkout@v4
 
@@ -29,7 +54,7 @@ jobs:
         run: npm run test:coverage
 
       - name: Upload coverage to Codecov
-        if: matrix.node-version == '20.x'
+        if: matrix.node-version == '22'
         uses: codecov/codecov-action@v5
         with:
           file: ./coverage/coverage-final.json
