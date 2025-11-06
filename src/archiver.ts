@@ -78,7 +78,7 @@ export class IbutsuArchiver {
   /**
    * Add result data to archive
    */
-  private async addResult(run: TestRun, result: TestResult): Promise<void> {
+  private async addResult(_run: TestRun, result: TestResult): Promise<void> {
     const resultDir = path.join(this.tempDir, result.id);
     await fs.promises.mkdir(resultDir, { recursive: true });
 

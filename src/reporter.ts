@@ -200,7 +200,7 @@ export default class IbutsuReporter implements Reporter {
    * Collect artifacts from failed test
    */
   private collectArtifacts(
-    test: TestCase,
+    _test: TestCase,
     result: PlaywrightTestResult,
     testResult: TestResult
   ): void {

@@ -23,7 +23,3 @@ repos:
         types: [file]
         files: \.(ts|tsx|json|yaml|md)$
         pass_filenames: false
-
-ci:
-  autofix_prs: false
-  skip: []

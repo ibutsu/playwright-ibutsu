@@ -209,4 +209,4 @@ MIT
 
 - [ibutsu-server](https://github.com/ibutsu/ibutsu-server) - The Ibutsu backend server
 - [pytest-ibutsu](https://github.com/ibutsu/pytest-ibutsu) - Pytest plugin for Ibutsu
-- [@ibutsu/client](https://github.com/ibutsu/ibutsu-client-javascript) - TypeScript client for Ibutsu API
+- [ibutsu-client-ts](https://github.com/ibutsu/ibutsu-client-javascript) - TypeScript client for Ibutsu API
