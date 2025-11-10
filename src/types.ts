@@ -107,7 +107,12 @@ export class TestRun implements IbutsuTestRun {
     // Add Jenkins metadata if available
     const jobName = process.env.JOB_NAME;
     const buildNumber = process.env.BUILD_NUMBER;
-    if (jobName && jobName.length > 0 && buildNumber && buildNumber.length > 0) {
+    if (
+      jobName !== undefined &&
+      jobName.length > 0 &&
+      buildNumber !== undefined &&
+      buildNumber.length > 0
+    ) {
       this.metadata.jenkins = {
         job_name: jobName,
         build_number: buildNumber,
@@ -116,7 +121,7 @@ export class TestRun implements IbutsuTestRun {
     }
 
     const envId = process.env.IBUTSU_ENV_ID;
-    if (envId && envId.length > 0) {
+    if (envId !== undefined && envId.length > 0) {
       this.metadata.env_id = envId;
     }
   }

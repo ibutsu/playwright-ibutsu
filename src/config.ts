@@ -8,7 +8,7 @@ import type { IbutsuReporterConfig } from './types';
  */
 export function getConfig(reporterConfig: IbutsuReporterConfig = {}): IbutsuReporterConfig {
   // Validate that token is not in config file (security)
-  if (reporterConfig.token && reporterConfig.token.length > 0) {
+  if (reporterConfig.token !== undefined && reporterConfig.token.length > 0) {
     throw new Error(
       'SECURITY ERROR: IBUTSU_TOKEN must not be stored in playwright.config.ts. ' +
         'Please use the IBUTSU_TOKEN environment variable instead.'
@@ -52,14 +52,14 @@ export function validateConfig(config: IbutsuReporterConfig): void {
 
   // If mode includes 'server', validate server configuration
   if (mode === 'server' || mode === 'both') {
-    if (!config.server || config.server.length === 0) {
+    if (config.server === undefined || config.server.length === 0) {
       throw new Error(
         'IBUTSU_SERVER is required when mode is "server" or "both". ' +
           'Set it via environment variable or reporter config.'
       );
     }
 
-    if (!config.token || config.token.length === 0) {
+    if (config.token === undefined || config.token.length === 0) {
       throw new Error(
         'IBUTSU_TOKEN is required when mode is "server" or "both". ' +
           'Set it via the IBUTSU_TOKEN environment variable.'
@@ -68,7 +68,7 @@ export function validateConfig(config: IbutsuReporterConfig): void {
   }
 
   // Normalize server URL
-  if (config.server && config.server.length > 0) {
+  if (config.server !== undefined && config.server.length > 0) {
     let server = config.server;
     // Remove trailing slash
     if (server.endsWith('/')) {

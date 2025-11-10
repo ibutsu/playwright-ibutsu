@@ -34,7 +34,7 @@ describe('IbutsuArchiver', () => {
     // Clean up test output
     try {
       await fs.promises.rm(testOutputDir, { recursive: true, force: true });
-    } catch (error) {
+    } catch {
       // Ignore cleanup errors
     }
   });

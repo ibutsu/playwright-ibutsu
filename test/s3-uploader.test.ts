@@ -9,14 +9,14 @@ jest.mock('@aws-sdk/client-s3', () => ({
   S3Client: jest.fn().mockImplementation(() => ({
     send: mockS3Send,
   })),
-  HeadObjectCommand: jest.fn().mockImplementation((params) => params),
-  PutObjectCommand: jest.fn().mockImplementation((params) => params),
+  HeadObjectCommand: jest.fn().mockImplementation((params: unknown) => params),
+  PutObjectCommand: jest.fn().mockImplementation((params: unknown) => params),
 }));
 
 describe('S3Uploader', () => {
   const originalEnv = process.env;
   const testDir = path.join(__dirname, 'test-s3-files');
-  
+
   // Store original console methods
   const originalConsoleError = console.error;
   const originalConsoleLog = console.log;
@@ -26,7 +26,7 @@ describe('S3Uploader', () => {
     jest.clearAllMocks();
     mockS3Send.mockReset();
     process.env = { ...originalEnv };
-    
+
     // Suppress console output during tests to avoid confusion
     console.error = jest.fn();
     console.log = jest.fn();
@@ -38,7 +38,7 @@ describe('S3Uploader', () => {
     console.error = originalConsoleError;
     console.log = originalConsoleLog;
     console.warn = originalConsoleWarn;
-    
+
     // Clean up test files
     try {
       await fs.promises.rm(testDir, { recursive: true, force: true });
@@ -80,13 +80,13 @@ describe('S3Uploader', () => {
       const uploader = new S3Uploader();
 
       // Mock fs.promises.readdir
-      const mockReaddir = jest.spyOn(require('fs').promises, 'readdir');
+      const mockReaddir = jest.spyOn(fs.promises, 'readdir');
       mockReaddir.mockResolvedValue([
         '550e8400-e29b-41d4-a716-446655440000.tar.gz', // valid
         'not-a-uuid.tar.gz', // invalid
         '6ba7b810-9dad-11d1-80b4-00c04fd430c8.tar.gz', // valid
         'test.txt', // wrong extension
-      ]);
+      ] as unknown as fs.Dirent[]);
 
       const files = await uploader.findUuidTarGzFiles('.');
 
@@ -102,7 +102,7 @@ describe('S3Uploader', () => {
       const uploader = new S3Uploader();
 
       // Mock fs.promises.readdir to throw error
-      const mockReaddir = jest.spyOn(require('fs').promises, 'readdir');
+      const mockReaddir = jest.spyOn(fs.promises, 'readdir');
       mockReaddir.mockRejectedValue(new Error('Directory not found'));
 
       const files = await uploader.findUuidTarGzFiles('/non-existent');
@@ -156,9 +156,7 @@ describe('S3Uploader', () => {
       await fs.promises.writeFile(testFile, 'test content');
 
       // Mock S3 operations
-      mockS3Send
-        .mockResolvedValueOnce({ ContentLength: 0 })
-        .mockResolvedValueOnce({});
+      mockS3Send.mockResolvedValueOnce({ ContentLength: 0 }).mockResolvedValueOnce({});
 
       const result = await uploader.uploadFile(testFile, 'custom-key.tar.gz');
 
@@ -213,9 +211,7 @@ describe('S3Uploader', () => {
       await fs.promises.writeFile(testFile, 'test content');
 
       // Mock S3 HeadObject to throw other error
-      mockS3Send
-        .mockRejectedValueOnce(new Error('S3 connection error'))
-        .mockResolvedValueOnce({});
+      mockS3Send.mockRejectedValueOnce(new Error('S3 connection error')).mockResolvedValueOnce({});
 
       const result = await uploader.uploadFile(testFile);
 

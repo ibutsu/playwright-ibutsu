@@ -35,7 +35,7 @@
     "node_modules",
     "dist",
     "test",
-    "**/*.spec.ts",
-    "**/*.test.ts"
+    "**/*.test.ts",
+    "**/*.spec.ts"
   ]
 }
