@@ -210,20 +210,24 @@ export default class IbutsuReporter implements Reporter {
         const filename = attachment.name ?? 'screenshot.png';
         if (attachment.body) {
           testResult.addArtifact(filename, attachment.body);
-        } else if (attachment.path && attachment.path.length > 0) {
+        } else if (attachment.path !== undefined && attachment.path.length > 0) {
           testResult.addArtifact(filename, attachment.path);
         }
       }
 
       // Collect traces
-      if (attachment.name === 'trace' && attachment.path && attachment.path.length > 0) {
+      if (
+        attachment.name === 'trace' &&
+        attachment.path !== undefined &&
+        attachment.path.length > 0
+      ) {
         testResult.addArtifact('trace.zip', attachment.path);
       }
 
       // Collect videos
       if (
         attachment.contentType.startsWith('video/') &&
-        attachment.path &&
+        attachment.path !== undefined &&
         attachment.path.length > 0
       ) {
         testResult.addArtifact('video.webm', attachment.path);
@@ -296,9 +300,9 @@ export default class IbutsuReporter implements Reporter {
    */
   private async uploadToServer(results: TestResult[]): Promise<void> {
     if (
-      !this.config.server ||
+      this.config.server === undefined ||
       this.config.server.length === 0 ||
-      !this.config.token ||
+      this.config.token === undefined ||
       this.config.token.length === 0
     ) {
       console.error('Ibutsu Reporter: Server URL or token not configured');
@@ -318,7 +322,7 @@ export default class IbutsuReporter implements Reporter {
 
       if (success) {
         console.log('  Upload successful!');
-        if (frontendUrl && frontendUrl.length > 0) {
+        if (frontendUrl !== undefined && frontendUrl.length > 0) {
           console.log(`  View results: ${frontendUrl}/runs/${this.run.id}`);
         }
       } else {
@@ -333,7 +337,7 @@ export default class IbutsuReporter implements Reporter {
    * Upload archives to S3
    */
   private async uploadToS3(): Promise<void> {
-    if (!this.config.s3Bucket || this.config.s3Bucket.length === 0) {
+    if (this.config.s3Bucket === undefined || this.config.s3Bucket.length === 0) {
       return;
     }
 

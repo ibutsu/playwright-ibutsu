@@ -123,7 +123,7 @@ export class IbutsuSender {
     // Set SSL CA cert if environment variable is set
     for (const envVar of CA_BUNDLE_ENVS) {
       const certPath = process.env[envVar];
-      if (certPath && certPath.length > 0) {
+      if (certPath !== undefined && certPath.length > 0) {
         // Note: typescript-fetch doesn't directly support custom CA certs
         // This would need to be handled at the fetch layer
         console.log(`CA bundle found at ${envVar}: ${certPath}`);

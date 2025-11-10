@@ -4,6 +4,7 @@ A Playwright test reporter for uploading test results to [Ibutsu](https://github
 
 
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/ibutsu/playwright-ibutsu/main.svg)](https://results.pre-commit.ci/latest/github/ibutsu/playwright-ibutsu/main)
+[![codecov](https://codecov.io/gh/ibutsu/playwright-ibutsu/branch/main/graph/badge.svg)](https://codecov.io/gh/ibutsu/playwright-ibutsu)
 
 
 ## Features
@@ -24,13 +25,13 @@ A Playwright test reporter for uploading test results to [Ibutsu](https://github
 ## Installation
 
 ```bash
-npm install playwright-ibutsu
+yarn add playwright-ibutsu
 ```
 
-Or with yarn:
+Or with npm:
 
 ```bash
-yarn add playwright-ibutsu
+npm install playwright-ibutsu
 ```
 
 ## Configuration
@@ -142,7 +143,7 @@ jobs:
           node-version: '20'
 
       - name: Install dependencies
-        run: npm ci
+        run: yarn install --frozen-lockfile
 
       - name: Run Playwright tests
         env:

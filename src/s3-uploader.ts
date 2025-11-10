@@ -136,7 +136,7 @@ export class S3Uploader {
     for (const filePath of files) {
       try {
         const s3Url = await this.uploadFile(filePath);
-        if (s3Url) {
+        if (s3Url !== null) {
           uploadedUrls.push(s3Url);
         }
       } catch (error) {

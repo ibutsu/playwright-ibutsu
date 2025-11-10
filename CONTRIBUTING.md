@@ -6,7 +6,7 @@ Thank you for your interest in contributing to playwright-ibutsu!
 
 ### Prerequisites
 
-- Node.js 18+ and npm
+- Node.js 22+ and yarn
 - Git
 
 ### Getting Started
@@ -19,17 +19,17 @@ cd playwright-ibutsu
 
 2. Install dependencies:
 ```bash
-npm install
+yarn install
 ```
 
 3. Build the project:
 ```bash
-npm run build
+yarn run build
 ```
 
 4. Run tests:
 ```bash
-npm test
+yarn test
 ```
 
 ## Project Structure
@@ -63,19 +63,19 @@ git checkout -b feature/your-feature-name
 
 3. Run linting and formatting:
 ```bash
-npm run lint:fix
-npm run format
+yarn run lint:fix
+yarn run format
 ```
 
 4. Run tests:
 ```bash
-npm test
-npm run test:coverage
+yarn test
+yarn run test:coverage
 ```
 
 5. Build the project:
 ```bash
-npm run build
+yarn run build
 ```
 
 ### Code Style
@@ -95,8 +95,8 @@ npm run build
 - Place tests in the `test/` directory
 - Test files should be named `*.test.ts`
 - Aim for >70% code coverage
-- Run tests with: `npm test`
-- Run with coverage: `npm run test:coverage`
+- Run tests with: `yarn test`
+- Run with coverage: `yarn run test:coverage`
 
 ### Pre-commit Hooks
 
@@ -109,7 +109,7 @@ pre-commit install
 
 Or run manually:
 ```bash
-npm run precommit
+yarn run precommit
 ```
 
 ## Submitting Changes
@@ -164,17 +164,17 @@ To test your changes with a real Playwright project:
 
 1. Build the reporter:
 ```bash
-npm run build
+yarn run build
 ```
 
 2. Link it locally:
 ```bash
-npm link
+yarn link
 ```
 
 3. In your test project:
 ```bash
-npm link playwright-ibutsu
+yarn link playwright-ibutsu
 ```
 
 4. Add the reporter to your `playwright.config.ts` and run tests
