@@ -2,6 +2,12 @@ import { S3Uploader, uploadToS3 } from '../src/s3-uploader';
 import * as fs from 'fs';
 import * as path from 'path';
 
+// Type helper for mocking fs.promises.readdir with the string[] overload
+type ReaddirString = (
+  path: fs.PathLike,
+  options?: { encoding?: BufferEncoding | null; withFileTypes?: false }
+) => Promise<string[]>;
+
 // Mock AWS SDK
 const mockS3Send = jest.fn();
 
@@ -79,14 +85,17 @@ describe('S3Uploader', () => {
       process.env.AWS_BUCKET = 'test-bucket';
       const uploader = new S3Uploader();
 
-      // Mock fs.promises.readdir
-      const mockReaddir = jest.spyOn(fs.promises, 'readdir');
+      // Mock fs.promises.readdir with proper typing for the string[] overload
+      const mockReaddir = jest.spyOn(
+        fs.promises,
+        'readdir'
+      ) as unknown as jest.MockedFunction<ReaddirString>;
       mockReaddir.mockResolvedValue([
         '550e8400-e29b-41d4-a716-446655440000.tar.gz', // valid
         'not-a-uuid.tar.gz', // invalid
         '6ba7b810-9dad-11d1-80b4-00c04fd430c8.tar.gz', // valid
         'test.txt', // wrong extension
-      ] as unknown as fs.Dirent[]);
+      ]);
 
       const files = await uploader.findUuidTarGzFiles('.');
 
@@ -102,7 +111,10 @@ describe('S3Uploader', () => {
       const uploader = new S3Uploader();
 
       // Mock fs.promises.readdir to throw error
-      const mockReaddir = jest.spyOn(fs.promises, 'readdir');
+      const mockReaddir = jest.spyOn(
+        fs.promises,
+        'readdir'
+      ) as unknown as jest.MockedFunction<ReaddirString>;
       mockReaddir.mockRejectedValue(new Error('Directory not found'));
 
       const files = await uploader.findUuidTarGzFiles('/non-existent');
