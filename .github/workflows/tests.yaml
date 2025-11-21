@@ -16,7 +16,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '20'
           cache: 'yarn'
 
       - name: Install dependencies
@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: ["22"]
+        node-version: ["20"]
     steps:
       - uses: actions/checkout@v4
 
@@ -54,7 +54,7 @@ jobs:
         run: yarn test:coverage
 
       - name: Upload coverage to Codecov
-        if: matrix.node-version == '22' && (success() || failure())
+        if: matrix.node-version == '20' && (success() || failure())
         uses: codecov/codecov-action@v5
         with:
           file: ./coverage/coverage-final.json
