@@ -93,4 +93,3 @@ git push origin v0.0.2-beta.1
 ```
 
 When creating the GitHub release, check the "This is a pre-release" checkbox.
-
