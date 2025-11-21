@@ -1,6 +1,6 @@
 {
   "name": "playwright-ibutsu",
-  "version": "0.0.1",
+  "version": "0.0.0-development",
   "description": "A Playwright test reporter for uploading results to Ibutsu",
   "license": "MIT",
   "main": "dist/index.js",
