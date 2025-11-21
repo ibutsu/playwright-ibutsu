@@ -15,6 +15,7 @@ import {
   shouldCreateArchive,
   shouldUploadToServer,
   shouldUploadToS3,
+  getServerUrl,
 } from './config';
 import { createArchive } from './archiver';
 import { sendToServer } from './sender';
@@ -299,9 +300,9 @@ export default class IbutsuReporter implements Reporter {
    * Upload to Ibutsu server
    */
   private async uploadToServer(results: TestResult[]): Promise<void> {
+    const serverUrl = getServerUrl(this.config);
     if (
-      this.config.server === undefined ||
-      this.config.server.length === 0 ||
+      serverUrl === undefined ||
       this.config.token === undefined ||
       this.config.token.length === 0
     ) {
@@ -311,10 +312,10 @@ export default class IbutsuReporter implements Reporter {
 
     try {
       console.log('\nIbutsu Reporter: Uploading to server...');
-      console.log(`  Server: ${this.config.server}`);
+      console.log(`  Server: ${serverUrl}`);
 
       const { success, errors, frontendUrl } = await sendToServer(
-        this.config.server,
+        serverUrl,
         this.config.token,
         this.run,
         results

@@ -43,16 +43,20 @@ export interface IbutsuTestResult {
 
 /**
  * Configuration options for the Ibutsu reporter
+ *
+ * Following pytest-ibutsu pattern:
+ * - mode: 'archive', 's3', or a URL for server upload
+ * - If mode is a URL, it's treated as the server URL
+ * - token is required when mode is a URL (server mode)
  */
 export interface IbutsuReporterConfig {
-  // Server configuration
-  server?: string;
+  // Mode configuration - can be 'archive', 's3', or a server URL
+  mode?: string;
   token?: string;
   source?: string;
   project?: string;
 
-  // Mode configuration
-  mode?: 'server' | 'archive' | 'both';
+  // Archive configuration
   noArchive?: boolean;
 
   // S3 configuration
