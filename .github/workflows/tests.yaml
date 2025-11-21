@@ -54,7 +54,7 @@ jobs:
         run: yarn test:coverage
 
       - name: Upload coverage to Codecov
-        if: matrix.node-version == '22'
+        if: matrix.node-version == '22' && (success() || failure())
         uses: codecov/codecov-action@v5
         with:
           file: ./coverage/coverage-final.json
